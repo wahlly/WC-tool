@@ -27,5 +27,7 @@ func main () {
 	if opts[1] == "-c" {
 		getFileByteSize(opts[2])
 		return
+	} else if opts[1] == "-l" {
+		countFileLines(opts[2])
 	}
 }
