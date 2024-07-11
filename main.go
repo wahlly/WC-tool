@@ -28,6 +28,8 @@ func main () {
 		getFileByteSize(opts[2])
 		return
 	} else if opts[1] == "-l" {
-		countFileLines(opts[2])
+		countLinesInFile(opts[2])
+	} else if opts[1] == "-w" {
+		countWordsInFile(opts[2])
 	}
 }

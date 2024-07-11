@@ -7,22 +7,25 @@ import (
 )
 
 
-func countLinesInFile(filePath string) {
+
+func countWordsInFile (filePath string) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		fmt.Println("Unable to access file! ", err)
-		return
+		fmt.Println("Unable to access file: ", err)
 	}
-	// defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	lineCount := 0
+	scanner.Split(bufio.ScanWords)
+	words := 0
+
 	for scanner.Scan() {
-		lineCount++
-	}
-	if (scanner.Err() != nil) {
-		fmt.Println("Unable to scan file! ", scanner.Err())
+		words++
 	}
 
-	fmt.Println(lineCount, filePath)
+	if scanner.Err() != nil {
+		fmt.Println("Unable to scan file! ", scanner.Err())
+		return
+	}
+
+	fmt.Println(words, filePath)
 }
