@@ -2,28 +2,28 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"unicode/utf8"
 )
 
 
-func getFileByteSize(filePath string) (int64, error) {
-	file, err := os.Stat(filePath)
-	if err != nil {
-		fmt.Println("File does not exist!", err)
-		return 0, err
+func getFileByteSize(file io.Reader) (int, error) {
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	byteSize := 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		//added two for newline
+		byteSize += len(line) + 2
 	}
 
-	// fmt.Println(file.Size(), filePath)
-	return file.Size(), nil
+	return byteSize, nil
 }
 
 func countWordsInFile (filePath string) (int, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		// fmt.Println("Unable to access file: ", err)
 		return 0, err
 	}
 	defer file.Close()
@@ -38,18 +38,15 @@ func countWordsInFile (filePath string) (int, error) {
 
 	scanError := scanner.Err()
 	if scanError != nil {
-		// fmt.Println("Unable to scan file! ", scanner.Err())
 		return 0, scanError 
 	}
 
-	// fmt.Println(words, filePath)
 	return words, nil
 }
 
 func countLinesInFile(filePath string) (int, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		// fmt.Println("Unable to access file! ", err)
 		return 0, err
 	}
 	defer file.Close()
@@ -60,18 +57,15 @@ func countLinesInFile(filePath string) (int, error) {
 		lineCount++
 	}
 	if (scanner.Err() != nil) {
-		// fmt.Println("Unable to scan file! ", scanner.Err())
 		return 0, nil
 	}
 
-	// fmt.Println(lineCount, filePath)
 	return lineCount, nil
 }
 
 func countCharactersInFile (filePath string) (int, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		// fmt.Println("Unable to access file! ", err)
 		return 0, err
 	}
 	defer file.Close()
@@ -82,7 +76,6 @@ func countCharactersInFile (filePath string) (int, error) {
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil && err != io.EOF {
-			// fmt.Println("Unable to read file! ", err)
 			return 0, err
 		}
 
@@ -93,6 +86,5 @@ func countCharactersInFile (filePath string) (int, error) {
 		}
 	}
 
-	// fmt.Println(char, filePath)
 	return char, nil
 }
