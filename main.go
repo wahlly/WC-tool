@@ -15,9 +15,8 @@ func main () {
 	val = strings.TrimSpace(val)
 	opts := strings.Split(val, " ")
 
-	inputLen := len(opts)
-fmt.Println(inputLen)
-	if inputLen != 2 || inputLen != 3 {
+	var inputLen int = len(opts)
+	if inputLen != 2 && inputLen != 3 {
 		fmt.Println("Invalid command.!")
 		return
 	}
@@ -60,19 +59,19 @@ fmt.Println(inputLen)
 		if err != nil {
 			fmt.Println("Error while counting words in file: ", err)
 			return
-		} else{
-			result += " " + strconv.Itoa(res)
 		}
+
+		result += " " + strconv.Itoa(res)
 	}
 
-	if opts[1] == "-m" || inputLen == 2 {
+	if opts[1] == "-m" {
 		res, err := countCharactersInFile(filePath)
 		if err != nil {
 			fmt.Println("Error while counting characters in file: ", err)
 			return
-		} else{
-			result += " " + strconv.Itoa(res)
 		}
+
+		result += " " + strconv.Itoa(res)
 	}
 
 	fmt.Println(result, " ", filePath)
