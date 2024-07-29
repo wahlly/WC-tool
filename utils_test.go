@@ -112,3 +112,65 @@ func TestCountWordsInFile(t *testing.T) {
 		}
 	}
 }
+
+func TestCountLinesInFile(t *testing.T) {
+	type testI struct{
+		name 		string
+		content 	string
+		expected 	int
+	}
+
+	tests := []testI {
+		{
+			name:     "empty file",
+			content:  "",
+			expected: 0,
+		},
+		{
+			name:     "single line",
+			content:  "hello",
+			expected: 1,
+		},
+		{
+			name:     "multiple lines",
+			content:  "hello\nworld",
+			expected: 2,
+		},
+		{
+			name:     "multiple lines with different whitespace",
+			content:  "hello\n\nworld\n\n\n",
+			expected: 5,	//ignores the last trailing whitespace
+		},
+		{
+			name:     "lines with trailing newline",
+			content:  "hello\nworld\n",
+			expected: 2, 	//ignores the last trailing whitespace
+		},
+	}
+
+	for _, test := range tests {
+		tempFile, err := os.CreateTemp("", "testFile")
+		if err != nil {
+			t.Fatalf("failed to create temporary file: %v", err)
+		}
+		defer os.Remove(tempFile.Name())
+
+		_, writeErr := tempFile.WriteString((test.content))
+		if writeErr != nil {
+			t.Fatalf("failed to write to temporary file: %v", writeErr)
+		}
+
+		if err := tempFile.Close(); err != nil {
+			t.Fatalf("failed to close temporary file: %v", err)
+		}
+
+		actual, err := countLinesInFile(tempFile.Name())
+		if err != nil {
+			t.Fatalf("expected no error, got %v", err)
+		}
+
+		if actual != test.expected {
+			t.Errorf("expected %d, got %d", test.expected, actual)
+		}
+	}
+}
